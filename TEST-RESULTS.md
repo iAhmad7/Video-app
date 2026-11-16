@@ -1,15 +1,31 @@
 # Verification and limits
 
-Release verification: 14 November 2026 (Asia/Riyadh).
+Release v1.0.1 verification: 16 November 2026 (Asia/Riyadh).
 
 - Debian 13 x64; .NET SDK 10.0.404 / runtime 10.0.15.
 - FFmpeg/FFprobe 7.1.5 Debian build, with the encoders used by the test suite.
-- **32/32 integration tests passed.** `test-results.txt` is the original runner output.
-- WPF Release build and self-contained/framework-dependent Windows x64 publishing
-  succeeded with warnings treated as errors. No build warnings or errors.
+- **35/35 automated checks passed:** all 32 existing real-media tests and three targeted WPF/notification regressions. `test-results.txt` is the v1.0.1 runner output.
+- WPF Release build and self-contained Windows x64 publishing succeeded with warnings treated as errors. The runtime-required variant was not rebuilt for this patch.
 - Portable packages checked for Windows x64 EXE, app/config/dependency files,
   WPF/core runtimes in the self-contained build, and x64 LibVLC/player plugins.
   ARM64/x86 playback binaries and external ffmpeg.exe/ffprobe.exe are excluded.
+
+## v1.0.1 targeted regression checks
+
+- The queue ProgressBar explicitly uses `Value="{Binding Progress, Mode=OneWay}"`.
+  The regression check parses the XAML and reflects the compiled Job property to
+  verify its setter remains internal. This is static verification, not a live WPF test.
+- Sixteen repeated identical exceptions, including a wrapped identical root cause,
+  are suppressed after the first notification. Distinct errors remain eligible.
+- A second error cannot open another dialog while one is active; a distinct error
+  that was not displayed may be notified later. The exact guard used by the WPF
+  application is linked into the cross-platform regression harness.
+- The dispatcher handler marks errors handled before opening a modal dialog and
+  logs every occurrence before checking whether its popup should be suppressed.
+- Other WPF bindings were inspected. No equivalent read-only/TwoWay issue was found.
+- Linux cannot run WPF. The Windows **Remuxing -> Add Selected to Queue** GUI flow,
+  popup display, and native playback could not be tested here. Existing real remux
+  and queue processing tests passed; Windows confirmation of the UI fix is still needed.
 
 ## Implemented and exercised with real media
 

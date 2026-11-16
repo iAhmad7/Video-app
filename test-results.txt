@@ -1,8 +1,8 @@
-Luma integration tests — 2026-11-13T23:10:25.4873383+00:00
+Luma integration tests — 2026-11-16T13:00:23.9333222+00:00
 ffmpeg version 7.1.5-0+deb13u1 Copyright (c) 2000-2026 the FFmpeg developers
 OS: Debian GNU/Linux 13 (trixie)
 .NET: 10.0.15
-32/32 passed
+35/35 passed
 
 PASS FFprobe metadata parsing from actual media + missing metadata
 PASS Conversion: H.264 MP4 -> MPEG-4 AVI, resize + FPS + full decode
@@ -36,3 +36,6 @@ PASS Runtime QSV failure after stale successful detection retries CPU and report
 PASS Long recordings format without wrapping after 24 hours; cache can be cleared
 PASS Repair live-style MKV with no duration/index into duration-bearing seekable MKV
 PASS Timestamp repair normalizes actual negative-start TS timestamps
+PASS Queue progress binding is OneWay and the Job setter stays internal (static verification)
+PASS Identical UI errors show once per session; distinct errors remain eligible
+PASS UI exception dialogs cannot reenter; an unseen nested error may be shown later

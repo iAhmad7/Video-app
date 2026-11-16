@@ -296,6 +296,38 @@ await Test("Timestamp repair normalizes actual negative-start TS timestamps", as
     Console.WriteLine($"  Start timestamp before {originalStart}, after {repairedStart}");
     Check(repairedStart >= 0 && after.Duration > 11, "Timestamps were not normalized"); await Decode(repaired);
 });
+await Test("Queue progress binding is OneWay and the Job setter stays internal (static verification)", async () =>
+{
+    var xaml = System.Xml.Linq.XDocument.Load(Path.Combine(AppContext.BaseDirectory, "Fixtures", "MainWindow.xaml"));
+    var progressBars = xaml.Descendants().Where(e => e.Name.LocalName == "ProgressBar" && e.Attribute("Value")?.Value.Contains("Binding Progress") == true).ToArray();
+    Check(progressBars.Length == 1 && progressBars[0].Attribute("Value")!.Value == "{Binding Progress, Mode=OneWay}", "Queue progress must explicitly be read-only in the UI");
+    Check(typeof(Job).GetProperty(nameof(Job.Progress))!.SetMethod!.IsAssembly, "Progress setter must remain internal to the engine assembly");
+    await Task.CompletedTask;
+});
+await Test("Identical UI errors show once per session; distinct errors remain eligible", async () =>
+{
+    var guard = new Luma.Desktop.UiErrorDialogGuard();
+    Check(guard.TryBegin(new InvalidOperationException("binding failed")), "First error must be shown");
+    guard.End();
+    for (var i = 0; i < 16; i++) Check(!guard.TryBegin(new InvalidOperationException("binding failed")), "Repeated error must not reopen a dialog");
+    Check(!guard.TryBegin(new Exception("wrapper", new InvalidOperationException("binding failed"))), "Wrapped identical root cause must be suppressed");
+    Check(guard.TryBegin(new InvalidOperationException("different error")), "Different error must still be shown");
+    guard.End();
+    Check(guard.TryBegin(new IOException("binding failed")), "Different exception types must remain distinct");
+    guard.End();
+    await Task.CompletedTask;
+});
+await Test("UI exception dialogs cannot reenter; an unseen nested error may be shown later", async () =>
+{
+    var guard = new Luma.Desktop.UiErrorDialogGuard();
+    Check(guard.TryBegin(new InvalidOperationException("first")), "First dialog");
+    Check(!guard.TryBegin(new InvalidOperationException("first")), "Same error must not reenter");
+    Check(!guard.TryBegin(new InvalidOperationException("second")), "Different error must not stack another dialog while one is open");
+    guard.End();
+    Check(guard.TryBegin(new InvalidOperationException("second")), "An error not yet displayed must remain eligible");
+    guard.End();
+    await Task.CompletedTask;
+});
 var summary = $"Luma integration tests — {DateTimeOffset.UtcNow:O}\n{tools.Version}\nOS: {System.Runtime.InteropServices.RuntimeInformation.OSDescription}\n.NET: {Environment.Version}\n{results.Count - failed}/{results.Count} passed\n\n" + string.Join("\n", results);
 await File.WriteAllTextAsync(Path.Combine(root, "test-results.txt"), summary);
 Console.WriteLine($"\n{results.Count - failed}/{results.Count} passed. Report: {root}/test-results.txt");
