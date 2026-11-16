@@ -1,0 +1,3 @@
+115d3eef32190cd0f4e7a139a986be941f274754e85cff83add2ebedc19b6555  LumaToolkit-source.zip
+99c92fa61a6dee939ee671e9efcf60ec599b7f99bed249a61c0bedf0df1af6a3  LumaToolkit-win-x64-portable.zip
+2293ee3845eb6cec5ed064951abc93fb0a15ce040d27cfd7d58486e2c4f729b4  LumaToolkit-win-x64-runtime-required.zip

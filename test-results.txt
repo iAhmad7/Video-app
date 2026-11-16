@@ -1,0 +1,38 @@
+Luma integration tests — 2026-11-13T23:10:25.4873383+00:00
+ffmpeg version 7.1.5-0+deb13u1 Copyright (c) 2000-2026 the FFmpeg developers
+OS: Debian GNU/Linux 13 (trixie)
+.NET: 10.0.15
+32/32 passed
+
+PASS FFprobe metadata parsing from actual media + missing metadata
+PASS Conversion: H.264 MP4 -> MPEG-4 AVI, resize + FPS + full decode
+PASS Container-only converter automatically copies compatible streams
+PASS Quality compression: smaller output + preserved duration + full decode
+PASS Percentage reduction: 50% calculated size, real two-pass encode, within 15% of target
+PASS Target-size compression: real two-pass encode, within 15% of requested bytes
+PASS Remux MP4 -> MKV preserves every decoded video frame
+PASS MP4 -> TS -> repaired MKV remains decodable and seekable near end
+PASS Fast lossless cut preserves codec, produces playable bounded clip
+PASS Precise cut verifies duration and first frame matches requested source boundary
+PASS Lazy thumbnail extraction and cache hit without re-encode
+PASS PNG frame extraction produces actual image
+PASS Audio extraction: MP3, AAC/M4A, PCM/WAV and FLAC fully decode
+PASS Rotation, horizontal/vertical flips, crop and resize perform real encoding
+PASS WebM / VP9 and H.265 conversion work when available
+PASS Remux preserves multiple audio and subtitle tracks; track selection uses global IDs
+PASS Incompatible remux rejects, converter converts text subtitles for MP4
+PASS Unsupported codec/container and impossible targets produce readable errors
+PASS Output filename collision, suffix sanitization and original-file safety
+PASS Cancellation terminates an active owned encoding process and removes partial output
+PASS Probe and encoder failures include technical details, clean partials, leave originals
+PASS Queue continues after a failed job, cancellation marks waiting jobs
+PASS Quick + full decode validation report real streams and diagnostics
+PASS GPU capability uses a real encode; unsupported GPU falls back to CPU
+PASS Settings JSON round-trip, validation bounds, corrupted JSON error
+PASS No unfinished media/pass files and source hash remains identical after full suite
+PASS MOV and FLV encode and fully decode
+PASS Optional repaired-output deep validation runs before publication
+PASS Runtime QSV failure after stale successful detection retries CPU and reports fallback
+PASS Long recordings format without wrapping after 24 hours; cache can be cleared
+PASS Repair live-style MKV with no duration/index into duration-bearing seekable MKV
+PASS Timestamp repair normalizes actual negative-start TS timestamps
